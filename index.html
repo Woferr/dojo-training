@@ -3,163 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dojo Training & Health</title>
+    <title>Dojo Master v3</title>
     <style>
-        :root { 
-            --bg: #0b0e14; 
-            --card: #1c2128; 
-            --txt: #adbac7; 
-            --accent: #3fb950; 
-            --judo: #2f81f7;   
-            --danger: #f85149;
-            --gold: #f1e05a;
-        }
-        body { 
-            background: var(--bg); color: var(--txt); 
-            font-family: 'Segoe UI', Roboto, sans-serif; 
-            margin: 0; padding: 15px; line-height: 1.6;
-        }
-        h2 { text-align: center; color: white; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; }
-        
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; background: #161b22; padding: 5px; border-radius: 12px; }
-        .tab-btn { 
-            flex: 1; padding: 12px; border: none; border-radius: 8px; 
-            background: transparent; color: var(--txt); font-weight: bold; 
-            transition: 0.3s; cursor: pointer;
-        }
-        .tab-btn.active { background: var(--card); color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-
-        #tabataPanel { background: var(--card); border-radius: 16px; padding: 20px; margin-bottom: 20px; border: 2px solid var(--judo); text-align: center; }
-        #timerDisplay { font-size: 4em; font-weight: 800; color: var(--accent); margin: 10px 0; }
-        #statusDisplay { font-size: 1.2em; font-weight: bold; color: var(--gold); text-transform: uppercase; }
-
-        .card { 
-            background: var(--card); border-radius: 16px; padding: 20px; 
-            margin-bottom: 20px; border: 1px solid #30363d; 
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-        }
-        .card h3 { margin: 0 0 10px 0; color: white; font-size: 1.3em; }
-        .tag { background: rgba(63, 185, 80, 0.1); color: var(--accent); padding: 4px 10px; border-radius: 20px; font-size: 0.7em; border: 1px solid var(--accent); margin-right: 5px; }
-        .section-title { font-size: 0.8em; text-transform: uppercase; color: #768390; margin-top: 15px; display: block; font-weight: 800; }
-        .med-note { color: #85e89d; background: rgba(46, 160, 67, 0.1); padding: 10px; border-radius: 8px; border-left: 4px solid var(--accent); font-size: 0.9em; }
-        .judo-note { color: #79c0ff; background: rgba(56, 139, 253, 0.1); padding: 10px; border-radius: 8px; border-left: 4px solid var(--judo); font-size: 0.9em; }
-
-        button.main { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 800; font-size: 1em; margin-top: 10px; cursor: pointer; }
-        .btn-acc { background: linear-gradient(135deg, #238636, #2ea043); color: white; }
-        .btn-master { background: #21262d; color: #8b949e; border: 1px solid #30363d; margin-top: 40px; }
-        #masterPanel { display: none; background: #1c2128; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px dashed var(--accent); }
-        textarea { width: 100%; background: #0b0e14; color: #fff; border: 1px solid #30363d; border-radius: 8px; padding: 10px; box-sizing: border-box; }
+        :root { --bg: #0b0e14; --card: #1c2128; --txt: #adbac7; --accent: #3fb950; --judo: #2f81f7; --danger: #f85149; --gold: #f1e05a; }
+        body { background: var(--bg); color: var(--txt); font-family: sans-serif; margin: 0; padding: 15px; }
+        h2 { text-align: center; color: white; text-transform: uppercase; }
+        .tabs { display: flex; gap: 5px; margin-bottom: 20px; background: #161b22; padding: 5px; border-radius: 12px; font-size: 0.8em; }
+        .tab-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; background: transparent; color: var(--txt); cursor: pointer; }
+        .tab-btn.active { background: var(--card); color: white; border: 1px solid var(--judo); }
+        .panel { display: none; background: var(--card); border-radius: 16px; padding: 20px; margin-bottom: 20px; border: 1px solid #30363d; }
+        #timerDisplay { font-size: 4em; font-weight: 800; color: var(--accent); text-align: center; }
+        .card { background: var(--card); border-radius: 16px; padding: 15px; margin-bottom: 15px; border: 1px solid #30363d; }
+        .section-title { font-size: 0.7em; text-transform: uppercase; color: #768390; margin-top: 10px; display: block; font-weight: bold; }
+        .med-note { color: #85e89d; background: rgba(46,160,67,0.1); padding: 8px; border-radius: 8px; border-left: 3px solid var(--accent); }
+        .judo-note { color: #79c0ff; background: rgba(56,139,253,0.1); padding: 8px; border-radius: 8px; border-left: 3px solid var(--judo); }
+        button.main { width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-acc { background: var(--accent); color: white; }
+        video { width: 100%; border-radius: 12px; margin-top: 10px; background: #000; }
     </style>
 </head>
 <body>
-
-    <h2>🥋 Dojo Training</h2>
-
+    <h2>🥋 Dojo Master v3</h2>
     <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('salud', this)">Salud & Core</button>
-        <button class="tab-btn" onclick="switchTab('judo', this)">Modo Dojo</button>
+        <button class="tab-btn active" onclick="switchTab('salud', this)">Salud</button>
+        <button class="tab-btn" onclick="switchTab('judo', this)">Judo</button>
+        <button class="tab-btn" onclick="switchTab('reloj', this)">Cronómetro</button>
     </div>
 
-    <div id="tabataPanel" style="display:none;">
-        <div id="statusDisplay">PREPARADO</div>
+    <div id="relojPanel" class="panel">
+        <div id="statusDisplay" style="text-align:center; color:var(--gold)">TABATA READY</div>
         <div id="timerDisplay">00:20</div>
-        <div style="display: flex; gap: 10px;">
-            <button class="main btn-acc" style="flex:2" onclick="startTabata()">INICIAR</button>
-            <button class="main" style="flex:1; background:var(--danger); color:white" onclick="stopTabata()">PARAR</button>
-        </div>
+        <button class="main btn-acc" onclick="startTabata()">INICIAR</button>
+        <button class="main" style="background:var(--danger); color:white" onclick="stopTabata()">PARAR</button>
     </div>
 
-    <div id="masterPanel">
-        <h4 style="margin:0 0 10px 0">Importación Maestra</h4>
-        <textarea id="jsonInput" rows="5" placeholder="Pega el JSON aquí..."></textarea>
-        <button class="main btn-acc" onclick="importarJSON()">Cargar Conocimiento</button>
+    <div id="judoCamPanel" class="panel">
+        <h4 style="margin:0">Cámara Técnica (Análisis 0.5x)</h4>
+        <input type="file" id="videoInput" accept="video/*" style="margin-top:10px">
+        <video id="videoPlayer" controls></video>
+        <button class="main" style="background:var(--judo); color:white" onclick="slowMo()">MODO CÁMARA LENTA</button>
+    </div>
+
+    <div id="masterPanel" class="panel">
+        <textarea id="jsonInput" rows="3" style="width:100%; background:#000; color:#fff" placeholder="Pegar JSON..."></textarea>
+        <button class="main btn-acc" onclick="importarJSON()">Cargar</button>
     </div>
 
     <div id="content"></div>
-
-    <button class="main btn-master" onclick="checkMaster()">Acceso Maestro</button>
+    <button class="main" style="background:transparent; color:#555" onclick="checkMaster()">Acceso Maestro</button>
 
     <script>
         let db = JSON.parse(localStorage.getItem('dojo_db')) || [];
-        let currentTab = 'salud';
-        const MASTER_KEY = "JUDO2026";
-        let isMaster = false;
-        let timerInterval;
+        let currentTab = 'salud', isMaster = false, timerInterval;
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-        function beep(freq, duration) {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            osc.frequency.value = freq;
-            gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
-            osc.start(); osc.stop(audioCtx.currentTime + duration);
-        }
 
         function switchTab(tab, btn) {
             currentTab = tab;
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            document.getElementById('tabataPanel').style.display = (tab === 'judo') ? 'block' : 'none';
+            document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
+            if(tab === 'reloj') document.getElementById('relojPanel').style.display = 'block';
+            if(tab === 'judo') document.getElementById('judoCamPanel').style.display = 'block';
             render();
         }
 
+        // --- Lógica Video ---
+        document.getElementById('videoInput').onchange = function(e) {
+            const file = e.target.files[0];
+            document.getElementById('videoPlayer').src = URL.createObjectURL(file);
+        };
+        function slowMo() { 
+            const v = document.getElementById('videoPlayer');
+            v.playbackRate = (v.playbackRate === 1) ? 0.5 : 1;
+            alert("Velocidad: " + v.playbackRate + "x");
+        }
+
+        // --- Lógica Reloj ---
+        function beep(f, d) {
+            const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+            o.connect(g); g.connect(audioCtx.destination);
+            o.frequency.value = f; g.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + d);
+            o.start(); o.stop(audioCtx.currentTime + d);
+        }
         function startTabata() {
-            let rounds = 8, isWork = true, timeLeft = 20;
-            clearInterval(timerInterval);
-            beep(600, 0.5);
+            let r = 8, w = true, t = 20;
+            clearInterval(timerInterval); beep(600, 0.5);
             timerInterval = setInterval(() => {
-                timeLeft--;
-                if(timeLeft <= 0) {
-                    if(isWork) { isWork = false; timeLeft = 10; rounds--; beep(400, 0.5); if(rounds <= 0) { clearInterval(timerInterval); alert("¡Fin!"); return; } }
-                    else { isWork = true; timeLeft = 20; beep(800, 0.5); }
+                t--;
+                if(t <= 0) {
+                    if(w) { w = false; t = 10; r--; beep(400, 0.5); if(r <= 0) { clearInterval(timerInterval); return; } }
+                    else { w = true; t = 20; beep(800, 0.5); }
                 }
-                document.getElementById('timerDisplay').innerText = `00:${timeLeft.toString().padStart(2, '0')}`;
-                document.getElementById('statusDisplay').innerText = isWork ? `TRABAJO (${rounds})` : "DESCANSO";
-                document.getElementById('timerDisplay').style.color = isWork ? "var(--accent)" : "var(--gold)";
+                document.getElementById('timerDisplay').innerText = `00:${t.toString().padStart(2, '0')}`;
+                document.getElementById('statusDisplay').innerText = w ? `TRABAJO (${r})` : "DESCANSO";
             }, 1000);
         }
-
         function stopTabata() { clearInterval(timerInterval); }
 
-        function checkMaster() {
-            if(prompt("Introduce Passcode Maestro:") === MASTER_KEY) {
-                isMaster = true;
-                document.getElementById('masterPanel').style.display = 'block';
-                render();
-            }
-        }
-
+        function checkMaster() { if(prompt("Pass:") === "JUDO2026") { isMaster = true; document.getElementById('masterPanel').style.display = 'block'; render(); } }
         function importarJSON() {
-            try {
-                const data = JSON.parse(document.getElementById('jsonInput').value);
-                db = [...db, ...(Array.isArray(data) ? data : [data])];
-                localStorage.setItem('dojo_db', JSON.stringify(db));
-                document.getElementById('jsonInput').value = '';
-                render();
-            } catch(e) { alert("Error en JSON"); }
+            const data = JSON.parse(document.getElementById('jsonInput').value);
+            db = [...db, ...(Array.isArray(data) ? data : [data])];
+            localStorage.setItem('dojo_db', JSON.stringify(db));
+            render();
         }
-
-        function borrarItem(idx) { if(confirm("¿Eliminar?")) { db.splice(idx, 1); localStorage.setItem('dojo_db', JSON.stringify(db)); render(); } }
-
         function render() {
             const container = document.getElementById('content');
             container.innerHTML = '';
-            const filtered = db.filter(item => {
+            db.filter(item => {
                 const cat = item.categoria.toLowerCase();
-                return currentTab === 'salud' ? cat.includes('salud') : (cat.includes('dojo') || cat.includes('judo'));
-            });
-            filtered.forEach((item) => {
+                if(currentTab === 'salud') return cat.includes('salud');
+                if(currentTab === 'judo') return cat.includes('dojo') || cat.includes('judo');
+                return false;
+            }).forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'card';
-                card.innerHTML = `
-                    <h3>${item.titulo}</h3>
-                    ${item.tags.map(t => `<span class="tag">${t}</span>`).join('')}
-                    <span class="section-title">Técnica:</span><p>${item.tecnica}</p>
-                    <span class="section-title">Traumatólogo:</span><p class="med-note">${item.consejo_medico}</p>
-                    <span class="section-title">Judo:</span><p class="judo-note">${item.aplicacion_judo}</p>
-                    ${isMaster ? `<button onclick="borrarItem(${db.indexOf(item)})" style="color:var(--danger); background:none; border:none; cursor:pointer; font-size:0.8em; margin-top:10px">Eliminar Ficha</button>` : ''}
-                `;
+                card.innerHTML = `<h3>${item.titulo}</h3><p>${item.tecnica}</p>
+                    <span class="section-title">Médico:</span><p class="med-note">${item.consejo_medico}</p>
+                    <span class="section-title">Judo:</span><p class="judo-note">${item.aplicacion_judo}</p>`;
                 container.appendChild(card);
             });
         }
