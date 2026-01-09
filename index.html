@@ -3,37 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dojo Master Pro v9.7 - Athlean Edition</title>
+    <title>Dojo Master Pro v9.9</title>
     <style>
         :root { --bg: #0b0e14; --card: #1c2128; --txt: #adbac7; --accent: #3fb950; --judo: #2f81f7; --danger: #f85149; --gold: #f1e05a; }
-        body { background: var(--bg); color: var(--txt); font-family: sans-serif; margin: 0; padding: 15px; padding-bottom: 50px; }
+        body { background: var(--bg); color: var(--txt); font-family: sans-serif; margin: 0; padding: 10px; padding-bottom: 50px; }
         .tabs { display: flex; gap: 5px; margin-bottom: 15px; background: #161b22; padding: 5px; border-radius: 12px; position: sticky; top: 10px; z-index: 100; }
-        .tab-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; background: transparent; color: var(--txt); font-weight: bold; font-size: 0.7em; cursor: pointer; }
+        .tab-btn { flex: 1; padding: 12px 5px; border: none; border-radius: 8px; background: transparent; color: var(--txt); font-weight: bold; font-size: 0.7em; cursor: pointer; }
         .tab-btn.active { background: var(--card); color: white; border: 1px solid var(--judo); }
         .panel { display: none; background: var(--card); border-radius: 16px; padding: 15px; border: 1px solid #30363d; margin-bottom: 15px; }
         
         /* Video Player */
-        .v-container { background: #000; border-radius: 12px; overflow: hidden; margin-top: 10px; }
-        video { width: 100%; display: block; }
-        .v-controls { display: flex; flex-wrap: wrap; gap: 5px; padding: 10px; background: #161b22; }
-        .v-btn { flex: 1; padding: 12px; background: #21262d; border: 1px solid #444; color: white; border-radius: 8px; font-size: 0.8em; }
-        
-        /* Cards */
-        .card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid #30363d; margin-bottom: 15px; text-align: center; }
-        .card-icon { font-size: 45px; background: #0d1117; border-radius: 50%; width: 70px; height: 70px; line-height: 70px; margin: 0 auto 15px; border: 2px solid #30363d; }
-        .muscle-tag { color: var(--gold); font-size: 0.75em; font-weight: bold; text-transform: uppercase; margin-bottom: 8px; display: block; }
-        .agent { font-size: 0.85em; padding: 10px; border-radius: 8px; margin-top: 10px; border-left: 4px solid; text-align: left; line-height: 1.4; }
+        .v-container { background: #000; border-radius: 12px; overflow: hidden; margin-top: 10px; position: relative; }
+        video { width: 100%; display: block; max-height: 300px; }
+        .v-bar { height: 8px; background: #333; width: 100%; cursor: pointer; position: relative; border-top: 1px solid #444; }
+        .v-progress { height: 100%; background: var(--judo); width: 0%; pointer-events: none; }
+        .v-controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; padding: 10px; background: #161b22; }
+        .v-btn { padding: 12px; background: #21262d; border: 1px solid #444; color: white; border-radius: 8px; font-size: 0.75em; font-weight: bold; }
+
+        /* Tarjetas e Imágenes IA */
+        .card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid #30363d; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .card-img { width: 100%; height: 200px; background: #000; object-fit: cover; }
+        .card-body { padding: 15px; }
+        .muscle-tag { color: var(--gold); font-size: 0.7em; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; display: block; }
+        .agent { font-size: 0.82em; padding: 10px; border-radius: 8px; margin-top: 10px; border-left: 4px solid; line-height: 1.4; }
         .med { background: rgba(63, 185, 80, 0.08); border-color: var(--accent); color: #aff5b4; }
         .sensei { background: rgba(47, 129, 247, 0.08); border-color: var(--judo); color: #a5d6ff; }
         
         #timerDisplay { font-size: 4em; text-align: center; font-weight: 800; color: var(--accent); margin: 10px 0; font-family: monospace; }
-        button.main { width: 100%; padding: 14px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 0.9em; }
+        button.main { width: 100%; padding: 14px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
         .btn-acc { background: var(--accent); color: white; }
-        .routine-item { background: #0d1117; padding: 12px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #30363d; display: flex; justify-content: space-between; align-items: center; }
+        .routine-item { background: #0d1117; padding: 15px; border-radius: 10px; margin-bottom: 8px; border: 1px solid #30363d; display: flex; justify-content: space-between; align-items: center; }
         
-        /* Box de Análisis */
-        .analysis-box { background: #161b22; border-radius: 12px; padding: 15px; margin-top: 15px; border: 1px solid var(--judo); display: none; }
-        .analysis-box h5 { margin: 0 0 10px 0; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; }
+        .alert-box { border-radius: 12px; padding: 15px; margin-top: 15px; display: none; }
     </style>
 </head>
 <body>
@@ -47,50 +48,46 @@
 
     <div id="rutinaPanel" class="panel">
         <div id="rList"></div>
-        <button class="main" style="background:var(--gold); color:black" onclick="analizarCerebro()">🧠 EVALUAR RUTINA (ATHLEAN-X MODE)</button>
-        <div id="analysisResult" class="analysis-box"></div>
-    </div>
-
-    <div id="relojPanel" class="panel">
-        <div style="display:flex; gap:10px; margin-bottom:15px; font-size:0.8em">
-            <div style="flex:1">Rondas: <input id="iR" type="number" value="8" style="width:100%; background:#000; color:#fff; border:1px solid #444; border-radius:4px"></div>
-            <div style="flex:1">Trabajo: <input id="iW" type="number" value="20" style="width:100%; background:#000; color:#fff; border:1px solid #444; border-radius:4px"></div>
-            <div style="flex:1">Pausa: <input id="iP" type="number" value="10" style="width:100%; background:#000; color:#fff; border:1px solid #444; border-radius:4px"></div>
-        </div>
-        <div id="statusT" style="text-align:center; color:var(--gold)">LISTO</div>
-        <div id="timerDisplay">00:20</div>
-        <div style="display:flex; gap:5px">
-            <button class="main btn-acc" onclick="startT()">INICIAR</button>
-            <button class="main" style="background:var(--danger); color:white" onclick="stopT()">PARAR</button>
-            <button class="main" style="background:#444; color:white" onclick="resetT()">REINICIAR</button>
-        </div>
+        <button class="main" style="background:var(--gold); color:black" onclick="analizarCerebro()">🧠 ANALIZAR SEGÚN ANSELMO</button>
+        <div id="analysisResult" class="alert-box"></div>
     </div>
 
     <div id="judoPanel" class="panel">
         <input type="file" id="vIn" accept="video/*" style="width:100%; font-size:0.8em; margin-bottom:10px">
-        <div class="v-container"><video id="vPl"></video></div>
+        <div class="v-container">
+            <video id="vPl" playsinline></video>
+            <div class="v-bar" id="progressBar" onclick="vSeekFunc(event)"><div id="vProgress" class="v-progress"></div></div>
+        </div>
+        <div style="text-align:center; font-size:0.7em; margin:8px 0; color:var(--txt)" id="vTime">00:00 / 00:00</div>
         <div class="v-controls">
             <button class="v-btn" onclick="vM(-5)">-5s</button>
             <button class="v-btn" id="vPlay" onclick="vT()">PLAY</button>
             <button class="v-btn" onclick="vM(5)">+5s</button>
+            <button class="v-btn" style="background:var(--danger)" onclick="vStop()">STOP ⏹</button>
             <button class="v-btn" id="vSlow" onclick="vS()">0.5x</button>
+            <button class="v-btn" onclick="vM(1)">+1s</button>
         </div>
+    </div>
+
+    <div id="relojPanel" class="panel">
+        <div id="timerDisplay">00:20</div>
+        <button class="main btn-acc" onclick="startT()">INICIAR</button>
+        <button class="main" style="background:var(--danger); color:white" onclick="stopT()">PARAR</button>
     </div>
 
     <div id="content"></div>
 
-    <button id="masterBtn" class="main" style="background:transparent; color:#333; font-size:0.65em; margin-top:30px" onclick="checkM()">[ Configuración Avanzada ]</button>
+    <button id="masterBtn" class="main" style="background:transparent; color:#333; font-size:0.65em; margin-top:30px" onclick="checkM()">[ Configuración ]</button>
     <div id="masterPanel" class="panel">
-        <textarea id="jIn" rows="4" style="width:100%; background:#000; color:#fff; border-radius:8px; padding:8px" placeholder="Pegar JSON..."></textarea>
-        <button class="main btn-acc" onclick="importJ()">IMPORTAR</button>
-        <button class="main" style="background:var(--danger); color:white" onclick="logoutM()">CERRAR MAESTRO</button>
+        <textarea id="jIn" rows="4" style="width:100%; background:#000; color:#fff; border-radius:8px; padding:8px"></textarea>
+        <button class="main btn-acc" onclick="importJ()">IMPORTAR EJERCICIOS</button>
+        <button class="main" style="background:var(--danger); color:white; margin-top:10px" onclick="logoutM()">CERRAR SESIÓN ADMIN</button>
     </div>
 
     <script>
         let db = JSON.parse(localStorage.getItem('dojo_db')) || [];
         let rt = JSON.parse(localStorage.getItem('mi_rutina')) || [];
         let isMaster = localStorage.getItem('isMaster') === 'true';
-        let timer = null;
         const audio = new (window.AudioContext || window.webkitAudioContext)();
         const v = document.getElementById('vPl');
 
@@ -103,101 +100,26 @@
             t === 'salud' ? rDB() : (t === 'rutina' ? rRT() : null);
         }
 
-        // Lógica de Análisis Avanzado
-        function analizarCerebro() {
-            const box = document.getElementById('analysisResult');
-            box.style.display = 'block';
-            
-            const tags = rt.flatMap(x => x.tags.map(t => t.toLowerCase()));
-            const conteo = {};
-            tags.forEach(t => conteo[t] = (conteo[t] || 0) + 1);
-
-            let medMsg = "✅ Estructura articular estable.";
-            let senseiMsg = "🥋 Preparado para el combate.";
-            let color = varName('--accent');
-
-            // Criterio de sobrecarga lumbar (Criterio Anselmo)
-            if (conteo['lumbar'] > 3) {
-                medMsg = "⚠️ ALERTA: Fatiga acumulada en erectores espinales. Riesgo de hernia por volumen excesivo.";
-                color = varName('--danger');
-            } else if (conteo['lumbar'] > 0 && !tags.includes('movilidad')) {
-                medMsg = "💡 TIP MÉDICO: Falta movilidad de cadera para compensar la carga lumbar.";
-                color = varName('--gold');
-            }
-
-            // Criterio Athlean-X (Balance Empuje/Tracción)
-            const empuje = (conteo['pecho'] || 0) + (conteo['hombro'] || 0);
-            const traccion = (conteo['espalda'] || 0) + (conteo['traccion'] || 0);
-            if (empuje > traccion + 2) {
-                senseiMsg = "🚩 DESBALANCE: Demasiado empuje. Tu postura se cerrará. Añade 'Facepulls' o tracción.";
-                color = varName('--gold');
-            }
-
-            box.style.borderColor = color;
-            box.innerHTML = `
-                <h5>Diagnóstico del Dojo</h5>
-                <div class="agent med">🦴 <strong>TRAUMATÓLOGO:</strong><br>${medMsg}</div>
-                <div class="agent sensei" style="margin-top:10px">🎎 <strong>SENSEI:</strong><br>${senseiMsg}</div>
-                <p style="font-size:0.7em; margin-top:10px; color:#555">Basado en metodologías de Anselmo & Athlean-X</p>
-            `;
+        // Sonidos
+        function playBeep(f, d) { 
+            if(audio.state === 'suspended') audio.resume();
+            const o=audio.createOscillator(), g=audio.createGain();
+            o.connect(g); g.connect(audio.destination);
+            o.frequency.value=f; g.gain.setValueAtTime(0.1, audio.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.0001, audio.currentTime+d);
+            o.start(); o.stop(audio.currentTime+d);
         }
 
-        function varName(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
-
-        // Resto de funciones (Maestro, Reloj, Render)
-        function checkM() { if(!isMaster && prompt("Clave:")==="JUDO2026") { localStorage.setItem('isMaster','true'); location.reload(); } else { masterPanel.style.display='block'; } }
-        function logoutM() { localStorage.setItem('isMaster','false'); location.reload(); }
-        
+        // Lógica Video
         document.getElementById('vIn').onchange = (e) => { if(e.target.files[0]) v.src = URL.createObjectURL(e.target.files[0]); };
         function vT() { v.paused ? (v.play(), vPlay.innerText="PAUSA") : (v.pause(), vPlay.innerText="PLAY"); }
-        function vM(s) { v.currentTime += s; }
-        function vS() { v.playbackRate = v.playbackRate === 1 ? 0.5 : 1; vSlow.innerText = v.playbackRate + "x"; }
-
-        function beep(f, d) { if(audio.state === 'suspended') audio.resume(); const o=audio.createOscillator(), g=audio.createGain(); o.connect(g); g.connect(audio.destination); o.frequency.value=f; g.gain.exponentialRampToValueAtTime(0.00001, audio.currentTime+d); o.start(); o.stop(audio.currentTime+d); }
-        function startT() {
-            clearInterval(timer); let r=iR.value, w=iW.value, p=iP.value, isW=true, t=w; beep(600,0.4);
-            timer = setInterval(() => {
-                t--; if(t<=0) { if(isW) { isW=false; t=p; r--; beep(400,0.4); if(r<=0) { clearInterval(timer); statusT.innerText="FIN"; return; } } else { isW=true; t=w; beep(800,0.4); } }
-                timerDisplay.innerText = `00:${t.toString().padStart(2,'0')}`; statusT.innerText = isW ? `TRABAJO (${r})` : "PAUSA";
-            }, 1000);
-        }
-        function stopT() { clearInterval(timer); statusT.innerText="PAUSADO"; }
-        function resetT() { stopT(); timerDisplay.innerText="00:20"; }
-
-        function importJ() { try { db=[...db,...JSON.parse(jIn.value)]; localStorage.setItem('dojo_db',JSON.stringify(db)); jIn.value=''; rDB(); } catch(e){alert("Error JSON");} }
-        function addRT(i) { if(rt.some(x=>x.titulo===db[i].titulo)) return; rt.push({...db[i], done:false}); localStorage.setItem('mi_rutina',JSON.stringify(rt)); rRT(); }
         
-        function rDB() {
-            const c = document.getElementById('content'); c.innerHTML = '';
-            db.forEach((item, i) => {
-                let icon = item.tags[0].toLowerCase().includes('judo') ? '🥋' : '🦴';
-                c.innerHTML += `<div class="card">
-                    <div class="card-icon">${icon}</div>
-                    <span class="muscle-tag">📍 Foco: ${item.tags[0]}</span>
-                    <h3 style="margin:0; color:white">${item.titulo}</h3>
-                    <div class="agent med">🦴 <strong>Médico:</strong> ${item.consejo_medico}</div>
-                    <div class="agent sensei">🎎 <strong>Sensei:</strong> ${item.aplicacion_judo}</div>
-                    <button class="main btn-acc" onclick="addRT(${i})">+ AGREGAR</button>
-                    ${isMaster ? `<button onclick="delDB(${i})" style="color:var(--danger); background:none; border:none; margin-top:10px; font-size:0.7em">[ BORRAR ]</button>` : ''}
-                </div>`;
-            });
+        function vStop() { 
+            v.pause(); 
+            v.currentTime = 0; 
+            vPlay.innerText="PLAY"; 
+            playBeep(150, 0.5); // Sonido grave de parada
         }
 
-        function rRT() {
-            const l = document.getElementById('rList'); l.innerHTML = rt.length ? '' : '<p style="text-align:center">Vacío</p>';
-            rt.forEach((x, i) => {
-                l.innerHTML += `<div class="routine-item">
-                    <div onclick="tD(${i})" style="flex:1; opacity:${x.done?0.3:1}"><strong>${x.titulo}</strong></div>
-                    <button onclick="delRT(${i})" style="background:none; border:none; color:var(--danger)">✕</button>
-                </div>`;
-            });
-        }
-        function tD(i){ rt[i].done=!rt[i].done; localStorage.setItem('mi_rutina',JSON.stringify(rt)); rRT(); }
-        function delRT(i){ rt.splice(i,1); localStorage.setItem('mi_rutina',JSON.stringify(rt)); rRT(); }
-        function delDB(i){ if(confirm("¿Borrar?")){db.splice(i,1); localStorage.setItem('dojo_db',JSON.stringify(db)); rDB();} }
-
-        if(isMaster) { masterPanel.style.display = 'block'; masterBtn.innerText = "[ Admin Activo ]"; }
-        rDB();
-    </script>
-</body>
-</html>
+        function vM(s) { v.currentTime +=
+        
