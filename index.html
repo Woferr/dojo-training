@@ -3,171 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dojo Master v7 - Pro Trainer</title>
+    <title>Dojo Master Pro v8</title>
     <style>
         :root { --bg: #0b0e14; --card: #1c2128; --txt: #adbac7; --accent: #3fb950; --judo: #2f81f7; --danger: #f85149; --gold: #f1e05a; }
-        body { background: var(--bg); color: var(--txt); font-family: sans-serif; margin: 0; padding: 15px; padding-bottom: 80px; }
-        .tabs { display: flex; gap: 5px; margin-bottom: 20px; background: #161b22; padding: 5px; border-radius: 12px; position: sticky; top: 10px; z-index: 100; }
-        .tab-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; background: transparent; color: var(--txt); font-weight: bold; font-size: 0.7em; }
+        body { background: var(--bg); color: var(--txt); font-family: -apple-system, sans-serif; margin: 0; padding: 15px; padding-bottom: 50px; }
+        .tabs { display: flex; gap: 5px; margin-bottom: 15px; background: #161b22; padding: 5px; border-radius: 12px; position: sticky; top: 10px; z-index: 100; }
+        .tab-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; background: transparent; color: var(--txt); font-weight: bold; font-size: 0.75em; cursor: pointer; }
         .tab-btn.active { background: var(--card); color: white; border: 1px solid var(--judo); }
-        .panel { display: none; background: var(--card); border-radius: 16px; padding: 15px; border: 1px solid #30363d; margin-bottom: 20px; }
-        
-        /* Checklist y Rutina */
-        .routine-item { background: #0d1117; padding: 10px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid var(--judo); display: flex; justify-content: space-between; align-items: center; }
-        .warning { background: rgba(248, 81, 73, 0.1); color: var(--danger); padding: 10px; border-radius: 8px; border: 1px solid var(--danger); margin-bottom: 15px; font-size: 0.8em; display: none; }
-        
-        /* Cards con Imagen */
-        .card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid #30363d; margin-bottom: 15px; }
-        .card img { width: 100%; height: 180px; object-fit: cover; background: #000; }
-        .card-content { padding: 15px; }
-        
-        button.main { width: 100%; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .panel { display: none; background: var(--card); border-radius: 16px; padding: 15px; border: 1px solid #30363d; margin-bottom: 15px; }
+        .card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid #30363d; margin-bottom: 15px; }
+        .card h3 { margin: 0; color: white; font-size: 1.2em; display: flex; align-items: center; gap: 8px; }
+        .muscle-tag { color: var(--gold); font-size: 0.8em; font-weight: bold; text-transform: uppercase; margin-top: 5px; display: block; }
+        .agent-note { font-size: 0.85em; padding: 8px; border-radius: 6px; margin-top: 10px; }
+        .med { background: rgba(63, 185, 80, 0.1); border-left: 3px solid var(--accent); color: #aff5b4; }
+        .sensei { background: rgba(47, 129, 247, 0.1); border-left: 3px solid var(--judo); color: #a5d6ff; }
+        #timerDisplay { font-size: 4em; text-align: center; font-weight: 800; color: var(--accent); margin: 10px 0; font-variant-numeric: tabular-nums; }
+        .routine-item { background: #0d1117; padding: 12px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #30363d; display: flex; justify-content: space-between; align-items: center; }
+        button.main { width: 100%; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; margin-top: 8px; }
         .btn-acc { background: var(--accent); color: white; }
-        #timerDisplay { font-size: 3.5em; text-align: center; font-weight: 800; color: var(--accent); }
+        .warning-box { background: rgba(248,81,73,0.1); color: var(--danger); border: 1px solid var(--danger); padding: 10px; border-radius: 8px; margin-bottom: 10px; font-size: 0.85em; display: none; }
     </style>
 </head>
 <body>
 
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('salud', this)">BIBLIOTECA</button>
-        <button class="tab-btn" onclick="switchTab('rutina', this)">MI RUTINA</button>
-        <button class="tab-btn" onclick="switchTab('judo', this)">JUDO 📹</button>
+        <button class="tab-btn" onclick="switchTab('rutina', this)">MI DÍA</button>
         <button class="tab-btn" onclick="switchTab('reloj', this)">RELOJ</button>
+        <button class="tab-btn" onclick="switchTab('judo', this)">VIDEO 📹</button>
     </div>
 
-    <div id="alertBox" class="warning">⚠️ ALERTA DE SOBRECARGA: Demasiada carga en zona lumbar.</div>
+    <div id="alertBox" class="warning-box"></div>
 
     <div id="rutinaPanel" class="panel">
-        <h4 style="margin:0">Checklist del Día</h4>
-        <div id="routineList" style="margin-top:15px"></div>
-        <button class="main" style="background:var(--judo); color:white" onclick="analizarSobrecarga()">Analizar Balance de Carga</button>
+        <h4 style="margin:0">📋 Checklist de Entrenamiento</h4>
+        <div id="routineList" style="margin: 20px 0;"></div>
+        <button class="main" style="background:var(--judo); color:white" onclick="analizarSobrecarga()">ANALIZAR FATIGA</button>
     </div>
 
     <div id="relojPanel" class="panel">
+        <div style="display: flex; gap: 10px; margin-bottom: 15px; font-size: 0.8em;">
+            <div style="flex:1">Rondas: <input id="inpR" type="number" value="8" style="width:100%; background:#000; color:white; border:1px solid #444; border-radius:4px"></div>
+            <div style="flex:1">Trabajo: <input id="inpW" type="number" value="20" style="width:100%; background:#000; color:white; border:1px solid #444; border-radius:4px"></div>
+            <div style="flex:1">Pausa: <input id="inpP" type="number" value="10" style="width:100%; background:#000; color:white; border:1px solid #444; border-radius:4px"></div>
+        </div>
+        <div id="statusT" style="text-align:center; color:var(--gold); font-weight:bold">LISTO</div>
         <div id="timerDisplay">00:20</div>
         <div style="display:flex; gap:5px">
-            <button class="main btn-acc" onclick="startTabata()">PLAY</button>
-            <button class="main" style="background:var(--danger); color:white" onclick="stopTabata()">STOP</button>
-            <button class="main" style="background:#444; color:white" onclick="resetTabata()">RESET</button>
+            <button class="main btn-acc" onclick="startT()">PLAY</button>
+            <button class="main" style="background:var(--danger); color:white" onclick="stopT()">STOP</button>
+            <button class="main" style="background:#444; color:white" onclick="resetT()">RESET</button>
         </div>
     </div>
 
     <div id="judoPanel" class="panel">
-        <input type="file" id="videoInput" accept="video/*" style="width:100%; margin-bottom:10px">
-        <video id="videoPlayer" controls style="width:100%; border-radius:8px"></video>
-        <button class="main" style="background:var(--judo); color:white" onclick="document.getElementById('videoPlayer').playbackRate = 0.5">Slow Motion</button>
+        <input type="file" id="videoInput" accept="video/*" style="width:100%; margin-bottom:10px; font-size:0.8em">
+        <video id="videoPlayer" controls style="width:100%; border-radius:8px; background:#000"></video>
+        <button class="main" style="background:var(--judo); color:white" onclick="document.getElementById('videoPlayer').playbackRate = 0.5">SLOW MOTION (0.5x)</button>
     </div>
 
     <div id="content"></div>
 
-    <button class="main" style="background:transparent; color:#555; font-size:0.7em" onclick="checkMaster()">Acceso Maestro</button>
-
-    <div id="masterPanel" class="panel" style="margin-top:20px">
-        <textarea id="jsonInput" rows="3" style="width:100%; background:#000; color:#fff" placeholder="Pegar JSON con 'imagen': 'url'"></textarea>
-        <button class="main btn-acc" onclick="importarJSON()">Cargar Ejercicio</button>
+    <button class="main" style="background:transparent; color:#555; font-size:0.7em; margin-top:40px" onclick="checkM()">[ Acceso Maestro ]</button>
+    <div id="masterPanel" class="panel" style="margin-top:10px">
+        <textarea id="jsonIn" rows="4" style="width:100%; background:#000; color:#fff; font-family:monospace; font-size:0.8em" placeholder="Pega el JSON aquí..."></textarea>
+        <button class="main btn-acc" onclick="importJ()">IMPORTAR EJERCICIOS</button>
     </div>
 
     <script>
         let db = JSON.parse(localStorage.getItem('dojo_db')) || [];
-        let miRutina = JSON.parse(localStorage.getItem('mi_rutina')) || [];
-        let timerInterval, tWork = 20;
+        let rutina = JSON.parse(localStorage.getItem('mi_rutina')) || [];
+        let timer = null;
+        const audio = new (window.AudioContext || window.webkitAudioContext)();
+
+        function beep(f, d) {
+            if(audio.state === 'suspended') audio.resume();
+            const o = audio.createOscillator(), g = audio.createGain();
+            o.connect(g); g.connect(audio.destination);
+            o.frequency.value = f; g.gain.exponentialRampToValueAtTime(0.00001, audio.currentTime + d);
+            o.start(); o.stop(audio.currentTime + d);
+        }
 
         function switchTab(tab, btn) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
-            document.getElementById(tab + 'Panel') ? document.getElementById(tab + 'Panel').style.display = 'block' : null;
+            const target = document.getElementById(tab + 'Panel');
+            if(target) target.style.display = 'block';
             document.getElementById('content').style.display = (tab === 'salud') ? 'block' : 'none';
-            render();
+            if(tab === 'salud') renderDB();
             if(tab === 'rutina') renderRutina();
         }
 
-        function resetTabata() { stopTabata(); document.getElementById('timerDisplay').innerText = "00:20"; }
+        function startT() {
+            clearInterval(timer);
+            let r = parseInt(document.getElementById('inpR').value);
+            let work = parseInt(document.getElementById('inpW').value);
+            let pause = parseInt(document.getElementById('inpP').value);
+            let isW = true, t = work;
+            beep(600, 0.4);
+            timer = setInterval(() => {
+                t--;
+                if(t <= 0) {
+                    if(isW) { 
+                        isW = false; t = pause; r--; beep(400, 0.4);
+                        if(r <= 0) { clearInterval(timer); document.getElementById('statusT').innerText = "FIN"; return; }
+                    } else { isW = true; t = work; beep(800, 0.4); }
+                }
+                document.getElementById('timerDisplay').innerText = `00:${t.toString().padStart(2, '0')}`;
+                document.getElementById('statusT').innerText = isW ? `TRABAJO (${r})` : "DESCANSO";
+            }, 1000);
+        }
+        function stopT() { clearInterval(timer); beep(200, 0.2); document.getElementById('statusT').innerText = "PAUSA"; }
+        function resetT() { stopT(); document.getElementById('timerDisplay').innerText = "00:20"; }
 
-        function checkMaster() { if(prompt("Pass:") === "JUDO2026") document.getElementById('masterPanel').style.display = 'block'; }
+        function checkM() { if(prompt("Pass:") === "JUDO2026") document.getElementById('masterPanel').style.display = 'block'; }
 
-        function importarJSON() {
-            const data = JSON.parse(document.getElementById('jsonInput').value);
-            db = [...db, ...(Array.isArray(data) ? data : [data])];
-            localStorage.setItem('dojo_db', JSON.stringify(db));
-            render();
+        function importJ() {
+            try {
+                const data = JSON.parse(document.getElementById('jsonIn').value);
+                db = [...db, ...(Array.isArray(data) ? data : [data])];
+                localStorage.setItem('dojo_db', JSON.stringify(db));
+                document.getElementById('jsonIn').value = '';
+                renderDB();
+                alert("Cargado correctamente");
+            } catch(e) { alert("Error en JSON"); }
         }
 
-        function agregarARutina(idx) {
-            const series = prompt("¿Series?", "3");
-            const reps = prompt("¿Repeticiones?", "12");
-            miRutina.push({...db[idx], series, reps, hecha: false});
-            localStorage.setItem('mi_rutina', JSON.stringify(miRutina));
-            alert("Añadido a tu rutina diaria");
+        function addR(idx) {
+            const ej = db[idx];
+            if(rutina.some(r => r.titulo === ej.titulo)) return alert("Este ejercicio ya está en tu lista de hoy.");
+            const s = prompt("Series:", "3"), r = prompt("Reps:", "12");
+            rutina.push({...ej, series: s, reps: r, done: false});
+            localStorage.setItem('mi_rutina', JSON.stringify(rutina));
+            alert("Añadido a Mi Día");
+        }
+
+        function renderDB() {
+            const cont = document.getElementById('content');
+            cont.innerHTML = '';
+            db.forEach((item, i) => {
+                cont.innerHTML += `
+                    <div class="card">
+                        <h3>🥋 ${item.titulo}</h3>
+                        <span class="muscle-tag">📍 Músculo: ${item.tags[0]}</span>
+                        <p style="font-size:0.9em; margin:10px 0">${item.tecnica}</p>
+                        <div class="agent-note med">🦴 <strong>Traumatólogo:</strong> ${item.consejo_medico}</div>
+                        <div class="agent-note sensei">🎎 <strong>Sensei:</strong> ${item.aplicacion_judo}</div>
+                        <button class="main btn-acc" onclick="addR(${i})">+ AGREGAR A MI DÍA</button>
+                        <button onclick="borrarDB(${i})" style="background:none; border:none; color:var(--danger); font-size:0.7em; margin-top:10px; width:100%">[ Eliminar de biblioteca ]</button>
+                    </div>`;
+            });
         }
 
         function renderRutina() {
             const list = document.getElementById('routineList');
-            list.innerHTML = '';
-            miRutina.forEach((item, i) => {
+            list.innerHTML = rutina.length ? '' : '<p style="text-align:center; color:#555">No hay ejercicios hoy.</p>';
+            rutina.forEach((item, i) => {
                 list.innerHTML += `
-                    <div class="routine-item" style="opacity: ${item.hecha ? '0.5' : '1'}">
-                        <div>
-                            <strong>${item.titulo}</strong><br>
-                            <small>${item.series} series x ${item.reps} reps</small>
+                    <div class="routine-item" style="opacity:${item.done ? '0.4' : '1'}">
+                        <div onclick="toggleDone(${i})" style="flex:1">
+                            <strong style="color:${item.done ? 'var(--accent)' : 'white'}">${item.titulo}</strong><br>
+                            <small>${item.series}x${item.reps} | ${item.tags[0]}</small>
                         </div>
-                        <input type="checkbox" ${item.hecha ? 'checked' : ''} onclick="marcarHecho(${i})">
+                        <button onclick="delR(${i})" style="background:none; border:none; color:var(--danger)">✕</button>
                     </div>`;
             });
-        }
-
-        function marcarHecho(i) {
-            miRutina[i].hecha = !miRutina[i].hecha;
-            localStorage.setItem('mi_rutina', JSON.stringify(miRutina));
-            renderRutina();
         }
 
         function analizarSobrecarga() {
-            const tags = miRutina.flatMap(item => item.tags);
-            const conteo = {};
-            tags.forEach(t => conteo[t] = (conteo[t] || 0) + 1);
-            
-            const alertBox = document.getElementById('alertBox');
-            if(conteo['Lumbar'] > 2 || conteo['Hombro'] > 3) {
-                alertBox.innerText = "⚠️ RIESGO: Tienes muchos ejercicios de " + (conteo['Lumbar'] > 2 ? 'Lumbar' : 'Hombro') + ". Cambia uno por movilidad o descanso.";
-                alertBox.style.display = 'block';
+            const box = document.getElementById('alertBox');
+            const lumbares = rutina.filter(i => i.tags.join().toLowerCase().includes('lumbar')).length;
+            if(lumbares > 2) {
+                box.innerHTML = "⚠️ <strong>ALERTA DE FATIGA:</strong> Tienes " + lumbares + " ejercicios de zona Lumbar. Se recomienda cambiar uno por movilidad de cadera.";
+                box.style.display = 'block';
             } else {
-                alertBox.innerText = "✅ Rutina Balanceada. ¡Buen entrenamiento!";
-                alertBox.style.display = 'block';
-                alertBox.style.color = 'var(--accent)';
-                alertBox.style.borderColor = 'var(--accent)';
+                box.innerHTML = "✅ <strong>BALANCE OK:</strong> Tu rutina es segura para hoy.";
+                box.style.display = 'block'; box.style.borderColor = 'var(--accent)'; box.style.color = 'var(--accent)';
             }
         }
 
-        function render() {
-            const container = document.getElementById('content');
-            container.innerHTML = '';
-            db.forEach((item, idx) => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <img src="${item.imagen || 'https://via.placeholder.com/400x200?text=Judo+Pro'}" alt="ejercicio">
-                    <div class="card-content">
-                        <h3>${item.titulo}</h3>
-                        <p style="font-size:0.8em">${item.tecnica}</p>
-                        <button class="main btn-acc" onclick="agregarARutina(${idx})">+ Agregar a mi Día</button>
-                    </div>`;
-                container.appendChild(card);
-            });
-        }
+        function toggleDone(i) { rutina[i].done = !rutina[i].done; localStorage.setItem('mi_rutina', JSON.stringify(rutina)); renderRutina(); }
+        function delR(i) { rutina.splice(i,1); localStorage.setItem('mi_rutina', JSON.stringify(rutina)); renderRutina(); }
+        function borrarDB(i) { if(confirm("¿Eliminar de biblioteca?")) { db.splice(i,1); localStorage.setItem('dojo_db', JSON.stringify(db)); renderDB(); } }
 
-        // Lógica de cronómetro simplificada para el ejemplo
-        function startTabata() { 
-            let t = 20; 
-            timerInterval = setInterval(() => { 
-                t--; 
-                document.getElementById('timerDisplay').innerText = `00:${t.toString().padStart(2, '0')}`;
-                if(t<=0) clearInterval(timerInterval);
-            }, 1000); 
-        }
-        function stopTabata() { clearInterval(timerInterval); }
-
-        render();
+        renderDB();
     </script>
 </body>
-</html>
+                                           </html>
+                                           
