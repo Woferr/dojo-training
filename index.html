@@ -121,5 +121,82 @@
             playBeep(150, 0.5); // Sonido grave de parada
         }
 
-        function vM(s) { v.currentTime +=
+        function vM(s) { v.currentTime += s; }
+        function vS() { v.playbackRate = v.playbackRate === 1 ? 0.5 : 1; vSlow.innerText = v.playbackRate + "x"; }
         
+        v.ontimeupdate = () => {
+            const p = (v.currentTime / v.duration) * 100;
+            document.getElementById('vProgress').style.width = p + "%";
+            document.getElementById('vTime').innerText = fmt(v.currentTime) + " / " + fmt(v.duration);
+        };
+        function vSeekFunc(e) { v.currentTime = (e.offsetX / e.currentTarget.offsetWidth) * v.duration; }
+        function fmt(s) { if(isNaN(s)) return "00:00"; const m=Math.floor(s/60), r=Math.floor(s%60); return `${m.toString().padStart(2,'0')}:${r.toString().padStart(2,'0')}`; }
+
+        // Cerebro Anselmo / Athlean-X
+        function analizarCerebro() {
+            const box = document.getElementById('analysisResult');
+            box.style.display = 'block';
+            const tags = rt.flatMap(x => x.tags.map(t => t.toLowerCase()));
+            
+            let med = "✅ Carga articular equilibrada.", sensei = "🥋 Postura de combate óptima.";
+            let color = "rgba(63, 185, 80, 0.15)";
+
+            const lumbarCount = tags.filter(t => t.includes('lumbar')).length;
+            const empujeCount = tags.filter(t => t.includes('empuje')).length;
+            const tracCount = tags.filter(t => t.includes('traccion')).length;
+
+            if(lumbarCount > 2) {
+                med = "⚠️ ALERTA ANSELMO: Demasiada compresión lumbar. Riesgo de inflamación discal. ¡Reduce volumen!";
+                color = "rgba(248, 81, 73, 0.25)";
+            }
+            if(empujeCount > tracCount + 1) {
+                sensei = "🚩 REGLA ATHLEAN-X: Desbalance detectado. Estás empujando más de lo que traccionas. ¡Añade remo!";
+                color = "rgba(241, 224, 90, 0.25)";
+            }
+
+            box.style.background = color;
+            box.style.border = "1px solid " + (color.includes('248') ? "var(--danger)" : "var(--gold)");
+            box.innerHTML = `<div class="agent med">🦴 <strong>MÉDICO:</strong><br>${med}</div><div class="agent sensei">🎎 <strong>SENSEI:</strong><br>${sensei}</div>`;
+        }
+
+        // Render y Admin
+        function checkM() { if(!isMaster && prompt("Pass:")==="JUDO2026") { localStorage.setItem('isMaster','true'); location.reload(); } else { masterPanel.style.display='block'; } }
+        function logoutM() { localStorage.setItem('isMaster','false'); location.reload(); }
+        function importJ() { try { db=[...db,...JSON.parse(jIn.value)]; localStorage.setItem('dojo_db',JSON.stringify(db)); rDB(); jIn.value=''; } catch(e){alert("Error JSON");} }
+
+        function rDB() {
+            const c = document.getElementById('content'); c.innerHTML = '';
+            db.forEach((item, i) => {
+                const img = `https://image.pollinations.ai/prompt/simple%20technical%20drawing%20exercise%20${item.titulo.replace(/ /g, '%20')}%20white%20background%20black%20lines?width=400&height=250&seed=${i+10}`;
+                c.innerHTML += `
+                    <div class="card">
+                        <img src="${img}" class="card-img" alt="ejercicio">
+                        <div class="card-body">
+                            <span class="muscle-tag">📍 ${item.tags.join(' / ')}</span>
+                            <h3 style="margin:0">${item.titulo}</h3>
+                            <div class="agent med">🦴 <strong>Médico:</strong> ${item.consejo_medico}</div>
+                            <div class="agent sensei">🎎 <strong>Sensei:</strong> ${item.aplicacion_judo}</div>
+                            <button class="main btn-acc" onclick="addRT(${i})">+ AGREGAR A MI RUTA</button>
+                            ${isMaster ? `<button onclick="delDB(${i})" style="color:var(--danger); background:none; border:none; margin-top:10px; width:100%; font-size:0.7em">[ BORRAR DE BASE ]</button>` : ''}
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function rRT() {
+            const l = document.getElementById('rList'); l.innerHTML = rt.length ? '' : '<p style="text-align:center">No hay ejercicios hoy</p>';
+            rt.forEach((x, i) => {
+                l.innerHTML += `<div class="routine-item"><div onclick="tD(${i})" style="flex:1; cursor:pointer; opacity:${x.done?0.3:1}"><strong>${x.titulo}</strong></div><button onclick="delRT(${i})" style="background:none; border:none; color:var(--danger); font-size:1.2em">✕</button></div>`;
+            });
+        }
+
+        function addRT(i) { if(rt.some(x=>x.titulo===db[i].titulo)) return; rt.push({...db[i], done:false}); localStorage.setItem('mi_rutina',JSON.stringify(rt)); }
+        function tD(i){ rt[i].done=!rt[i].done; localStorage.setItem('mi_rutina',JSON.stringify(rt)); rRT(); }
+        function delRT(i){ rt.splice(i,1); localStorage.setItem('mi_rutina',JSON.stringify(rt)); rRT(); }
+        function delDB(i){ if(confirm("Borrar?")){db.splice(i,1); localStorage.setItem('dojo_db',JSON.stringify(db)); rDB();} }
+
+        if(isMaster) { masterPanel.style.display = 'block'; masterBtn.innerText = "ADMIN MODE"; }
+        rDB();
+    </script>
+</body>
+</html>
