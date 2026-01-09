@@ -3,166 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dojo Master v6 - Media</title>
+    <title>Dojo Master v7 - Pro Trainer</title>
     <style>
-        :root { --bg: #0b0e14; --card: #1c2128; --txt: #adbac7; --accent: #3fb950; --judo: #2f81f7; --danger: #f85149; --gold: #f1e05a; --wa: #25d366; }
-        body { background: var(--bg); color: var(--txt); font-family: sans-serif; margin: 0; padding: 15px; }
-        h2 { text-align: center; color: white; text-transform: uppercase; margin-bottom: 15px; }
-        .tabs { display: flex; gap: 5px; margin-bottom: 20px; background: #161b22; padding: 5px; border-radius: 12px; }
-        .tab-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; background: transparent; color: var(--txt); cursor: pointer; font-weight: bold; font-size: 0.8em; }
+        :root { --bg: #0b0e14; --card: #1c2128; --txt: #adbac7; --accent: #3fb950; --judo: #2f81f7; --danger: #f85149; --gold: #f1e05a; }
+        body { background: var(--bg); color: var(--txt); font-family: sans-serif; margin: 0; padding: 15px; padding-bottom: 80px; }
+        .tabs { display: flex; gap: 5px; margin-bottom: 20px; background: #161b22; padding: 5px; border-radius: 12px; position: sticky; top: 10px; z-index: 100; }
+        .tab-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; background: transparent; color: var(--txt); font-weight: bold; font-size: 0.7em; }
         .tab-btn.active { background: var(--card); color: white; border: 1px solid var(--judo); }
-        .panel { display: none; background: var(--card); border-radius: 16px; padding: 20px; margin-bottom: 20px; border: 1px solid #30363d; }
+        .panel { display: none; background: var(--card); border-radius: 16px; padding: 15px; border: 1px solid #30363d; margin-bottom: 20px; }
         
-        /* Video & Media Controls */
-        .video-container { width: 100%; background: #000; border-radius: 12px; overflow: hidden; }
-        video { width: 100%; display: block; }
-        .video-controls { background: #161b22; padding: 10px; border-radius: 0 0 12px 12px; border: 1px solid #30363d; }
-        .control-row { display: flex; justify-content: space-around; gap: 5px; margin-top: 10px; }
-        .v-btn { background: #21262d; border: 1px solid #444; color: white; padding: 10px; border-radius: 8px; cursor: pointer; flex: 1; font-size: 0.8em; }
-        .v-btn:active { background: var(--judo); }
-        .btn-wa { background: var(--wa); color: white; border: none; display: none; margin-top: 10px; font-weight: bold; }
-
-        #timerDisplay { font-size: 4em; font-weight: 800; color: var(--accent); text-align: center; }
-        .config-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .config-row input { width: 45px; background: #000; color: var(--accent); border: 1px solid #444; border-radius: 5px; padding: 5px; text-align: center; }
-        .card { background: var(--card); border-radius: 16px; padding: 15px; margin-bottom: 15px; border: 1px solid #30363d; }
-        button.main { width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        /* Checklist y Rutina */
+        .routine-item { background: #0d1117; padding: 10px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid var(--judo); display: flex; justify-content: space-between; align-items: center; }
+        .warning { background: rgba(248, 81, 73, 0.1); color: var(--danger); padding: 10px; border-radius: 8px; border: 1px solid var(--danger); margin-bottom: 15px; font-size: 0.8em; display: none; }
+        
+        /* Cards con Imagen */
+        .card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid #30363d; margin-bottom: 15px; }
+        .card img { width: 100%; height: 180px; object-fit: cover; background: #000; }
+        .card-content { padding: 15px; }
+        
+        button.main { width: 100%; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
         .btn-acc { background: var(--accent); color: white; }
+        #timerDisplay { font-size: 3.5em; text-align: center; font-weight: 800; color: var(--accent); }
     </style>
 </head>
 <body>
-    <h2>🥋 Dojo Master v6</h2>
+
     <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('salud', this)">SALUD</button>
+        <button class="tab-btn active" onclick="switchTab('salud', this)">BIBLIOTECA</button>
+        <button class="tab-btn" onclick="switchTab('rutina', this)">MI RUTINA</button>
         <button class="tab-btn" onclick="switchTab('judo', this)">JUDO 📹</button>
         <button class="tab-btn" onclick="switchTab('reloj', this)">RELOJ</button>
     </div>
 
-    <div id="judoCamPanel" class="panel">
-        <h4 style="margin:0">📹 Cámara Técnica</h4>
-        <input type="file" id="videoInput" accept="video/*" style="margin: 15px 0; font-size: 0.8em; width:100%">
-        
-        <div class="video-container">
-            <video id="videoPlayer"></video>
-        </div>
-        
-        <div class="video-controls">
-            <input type="range" id="seekBar" value="0" step="0.1" style="width:100%; accent-color:var(--judo)">
-            <div class="control-row">
-                <button class="v-btn" onclick="move(-5)">-5s</button>
-                <button class="v-btn" id="playBtn" onclick="togglePlay()">PLAY</button>
-                <button class="v-btn" onclick="move(5)">+5s</button>
-                <button class="v-btn" id="slowBtn" onclick="toggleSlow()">0.5x</button>
-            </div>
-            <button id="shareWABtn" class="main btn-wa" onclick="shareToWhatsApp()">📲 COMPARTIR EN WHATSAPP</button>
-        </div>
+    <div id="alertBox" class="warning">⚠️ ALERTA DE SOBRECARGA: Demasiada carga en zona lumbar.</div>
+
+    <div id="rutinaPanel" class="panel">
+        <h4 style="margin:0">Checklist del Día</h4>
+        <div id="routineList" style="margin-top:15px"></div>
+        <button class="main" style="background:var(--judo); color:white" onclick="analizarSobrecarga()">Analizar Balance de Carga</button>
     </div>
 
     <div id="relojPanel" class="panel">
-        <div class="config-row"><span>Rondas:</span><input type="number" id="inpRondas" value="8"></div>
-        <div class="config-row"><span>Trabajo:</span><input type="number" id="inpWork" value="20"></div>
-        <div class="config-row"><span>Descanso:</span><input type="number" id="inpRest" value="10"></div>
         <div id="timerDisplay">00:20</div>
-        <button class="main btn-acc" onclick="startTabata()">INICIAR</button>
-        <button class="main" style="background:var(--danger); color:white" onclick="stopTabata()">PARAR</button>
+        <div style="display:flex; gap:5px">
+            <button class="main btn-acc" onclick="startTabata()">PLAY</button>
+            <button class="main" style="background:var(--danger); color:white" onclick="stopTabata()">STOP</button>
+            <button class="main" style="background:#444; color:white" onclick="resetTabata()">RESET</button>
+        </div>
     </div>
 
-    <div id="masterPanel" class="panel">
-        <textarea id="jsonInput" rows="3" style="width:100%; background:#000; color:#fff" placeholder="JSON..."></textarea>
-        <button class="main btn-acc" onclick="importarJSON()">Cargar</button>
+    <div id="judoPanel" class="panel">
+        <input type="file" id="videoInput" accept="video/*" style="width:100%; margin-bottom:10px">
+        <video id="videoPlayer" controls style="width:100%; border-radius:8px"></video>
+        <button class="main" style="background:var(--judo); color:white" onclick="document.getElementById('videoPlayer').playbackRate = 0.5">Slow Motion</button>
     </div>
 
     <div id="content"></div>
-    <button class="main" style="background:transparent; color:#555; font-size: 0.8em;" onclick="checkMaster()">Acceso Maestro</button>
+
+    <button class="main" style="background:transparent; color:#555; font-size:0.7em" onclick="checkMaster()">Acceso Maestro</button>
+
+    <div id="masterPanel" class="panel" style="margin-top:20px">
+        <textarea id="jsonInput" rows="3" style="width:100%; background:#000; color:#fff" placeholder="Pegar JSON con 'imagen': 'url'"></textarea>
+        <button class="main btn-acc" onclick="importarJSON()">Cargar Ejercicio</button>
+    </div>
 
     <script>
         let db = JSON.parse(localStorage.getItem('dojo_db')) || [];
-        let isMaster = false, timerInterval, selectedFile;
-        const video = document.getElementById('videoPlayer');
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let miRutina = JSON.parse(localStorage.getItem('mi_rutina')) || [];
+        let timerInterval, tWork = 20;
 
         function switchTab(tab, btn) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            document.getElementById('relojPanel').style.display = (tab === 'reloj') ? 'block' : 'none';
-            document.getElementById('judoCamPanel').style.display = (tab === 'judo') ? 'block' : 'none';
+            document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
+            document.getElementById(tab + 'Panel') ? document.getElementById(tab + 'Panel').style.display = 'block' : null;
             document.getElementById('content').style.display = (tab === 'salud') ? 'block' : 'none';
+            render();
+            if(tab === 'rutina') renderRutina();
+        }
+
+        function resetTabata() { stopTabata(); document.getElementById('timerDisplay').innerText = "00:20"; }
+
+        function checkMaster() { if(prompt("Pass:") === "JUDO2026") document.getElementById('masterPanel').style.display = 'block'; }
+
+        function importarJSON() {
+            const data = JSON.parse(document.getElementById('jsonInput').value);
+            db = [...db, ...(Array.isArray(data) ? data : [data])];
+            localStorage.setItem('dojo_db', JSON.stringify(db));
             render();
         }
 
-        // --- Lógica Video & WhatsApp ---
-        document.getElementById('videoInput').onchange = function(e) {
-            selectedFile = e.target.files[0];
-            if(selectedFile) video.src = URL.createObjectURL(selectedFile);
-        };
+        function agregarARutina(idx) {
+            const series = prompt("¿Series?", "3");
+            const reps = prompt("¿Repeticiones?", "12");
+            miRutina.push({...db[idx], series, reps, hecha: false});
+            localStorage.setItem('mi_rutina', JSON.stringify(miRutina));
+            alert("Añadido a tu rutina diaria");
+        }
 
-        async function shareToWhatsApp() {
-            if (!selectedFile) return alert("Carga un video primero");
-            if (navigator.share) {
-                try {
-                    await navigator.share({
-                        files: [selectedFile],
-                        title: 'Clip de Judo',
-                        text: 'Mira mi técnica en cámara lenta'
-                    });
-                } catch (err) { console.error("Error al compartir", err); }
+        function renderRutina() {
+            const list = document.getElementById('routineList');
+            list.innerHTML = '';
+            miRutina.forEach((item, i) => {
+                list.innerHTML += `
+                    <div class="routine-item" style="opacity: ${item.hecha ? '0.5' : '1'}">
+                        <div>
+                            <strong>${item.titulo}</strong><br>
+                            <small>${item.series} series x ${item.reps} reps</small>
+                        </div>
+                        <input type="checkbox" ${item.hecha ? 'checked' : ''} onclick="marcarHecho(${i})">
+                    </div>`;
+            });
+        }
+
+        function marcarHecho(i) {
+            miRutina[i].hecha = !miRutina[i].hecha;
+            localStorage.setItem('mi_rutina', JSON.stringify(miRutina));
+            renderRutina();
+        }
+
+        function analizarSobrecarga() {
+            const tags = miRutina.flatMap(item => item.tags);
+            const conteo = {};
+            tags.forEach(t => conteo[t] = (conteo[t] || 0) + 1);
+            
+            const alertBox = document.getElementById('alertBox');
+            if(conteo['Lumbar'] > 2 || conteo['Hombro'] > 3) {
+                alertBox.innerText = "⚠️ RIESGO: Tienes muchos ejercicios de " + (conteo['Lumbar'] > 2 ? 'Lumbar' : 'Hombro') + ". Cambia uno por movilidad o descanso.";
+                alertBox.style.display = 'block';
             } else {
-                alert("Tu navegador no soporta compartir archivos directamente.");
+                alertBox.innerText = "✅ Rutina Balanceada. ¡Buen entrenamiento!";
+                alertBox.style.display = 'block';
+                alertBox.style.color = 'var(--accent)';
+                alertBox.style.borderColor = 'var(--accent)';
             }
         }
-
-        function togglePlay() { video.paused ? (video.play(), playBtn.innerText="PAUSA") : (video.pause(), playBtn.innerText="PLAY"); }
-        function toggleSlow() { video.playbackRate = (video.playbackRate === 1) ? 0.5 : 1; slowBtn.innerText = video.playbackRate + "x"; }
-        function move(sec) { video.currentTime += sec; }
-        
-        video.ontimeupdate = () => seekBar.value = video.currentTime;
-        video.onloadedmetadata = () => seekBar.max = video.duration;
-        seekBar.oninput = () => video.currentTime = seekBar.value;
-
-        // --- Resto de lógica ---
-        function checkMaster() {
-            if(prompt("Pass:") === "JUDO2026") {
-                isMaster = true;
-                document.getElementById('masterPanel').style.display = 'block';
-                document.getElementById('shareWABtn').style.display = 'block';
-                render();
-            }
-        }
-
-        function beep(f, d) {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-            o.connect(g); g.connect(audioCtx.destination);
-            o.frequency.value = f; g.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + d);
-            o.start(); o.stop(audioCtx.currentTime + d);
-        }
-
-        function startTabata() {
-            let r = parseInt(inpRondas.value), w = true, t = parseInt(inpWork.value);
-            clearInterval(timerInterval); beep(600, 0.5);
-            timerInterval = setInterval(() => {
-                t--;
-                if(t <= 0) {
-                    if(w) { w = false; t = parseInt(inpRest.value); r--; beep(400, 0.5); if(r <= 0) { clearInterval(timerInterval); return; } }
-                    else { w = true; t = parseInt(inpWork.value); beep(800, 0.5); }
-                }
-                timerDisplay.innerText = `00:${t.toString().padStart(2, '0')}`;
-            }, 1000);
-        }
-
-        function stopTabata() { clearInterval(timerInterval); beep(200, 0.3); }
 
         function render() {
             const container = document.getElementById('content');
             container.innerHTML = '';
-            db.filter(item => item.categoria.toLowerCase().includes('salud')).forEach(item => {
+            db.forEach((item, idx) => {
                 const card = document.createElement('div');
                 card.className = 'card';
-                card.innerHTML = `<h3>${item.titulo}</h3><p>${item.tecnica}</p>
-                <div style="font-size:0.8em; color:var(--accent)">Médico: ${item.consejo_medico}</div>`;
+                card.innerHTML = `
+                    <img src="${item.imagen || 'https://via.placeholder.com/400x200?text=Judo+Pro'}" alt="ejercicio">
+                    <div class="card-content">
+                        <h3>${item.titulo}</h3>
+                        <p style="font-size:0.8em">${item.tecnica}</p>
+                        <button class="main btn-acc" onclick="agregarARutina(${idx})">+ Agregar a mi Día</button>
+                    </div>`;
                 container.appendChild(card);
             });
         }
+
+        // Lógica de cronómetro simplificada para el ejemplo
+        function startTabata() { 
+            let t = 20; 
+            timerInterval = setInterval(() => { 
+                t--; 
+                document.getElementById('timerDisplay').innerText = `00:${t.toString().padStart(2, '0')}`;
+                if(t<=0) clearInterval(timerInterval);
+            }, 1000); 
+        }
+        function stopTabata() { clearInterval(timerInterval); }
+
         render();
     </script>
 </body>
