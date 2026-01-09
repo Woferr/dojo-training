@@ -5,60 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dojo Training & Health</title>
     <style>
-    <style>
-    :root { 
-        --bg: #0b0e14; 
-        --card: #1c2128; 
-        --txt: #adbac7; 
-        --accent: #3fb950; /* Verde Salud */
-        --judo: #2f81f7;   /* Azul Judo */
-        --danger: #f85149;
-        --gold: #f1e05a;
-    }
-    body { 
-        background: var(--bg); 
-        color: var(--txt); 
-        font-family: 'Segoe UI', Roboto, sans-serif; 
-        margin: 0; padding: 15px;
-        line-height: 1.6;
-    }
-    h2 { text-align: center; color: white; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 30px; }
-    
-    /* Botones de Pestañas con Efecto */
-    .tabs { display: flex; gap: 10px; margin-bottom: 25px; background: #161b22; padding: 5px; border-radius: 12px; }
-    .tab-btn { 
-        flex: 1; padding: 12px; border: none; border-radius: 8px; 
-        background: transparent; color: var(--txt); font-weight: bold; 
-        transition: 0.3s; cursor: pointer;
-    }
-    .tab-btn.active { background: var(--card); color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        :root { 
+            --bg: #0b0e14; 
+            --card: #1c2128; 
+            --txt: #adbac7; 
+            --accent: #3fb950; 
+            --judo: #2f81f7;   
+            --danger: #f85149;
+            --gold: #f1e05a;
+        }
+        body { 
+            background: var(--bg); color: var(--txt); 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
+            margin: 0; padding: 15px; line-height: 1.6;
+        }
+        h2 { text-align: center; color: white; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; }
+        
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; background: #161b22; padding: 5px; border-radius: 12px; }
+        .tab-btn { 
+            flex: 1; padding: 12px; border: none; border-radius: 8px; 
+            background: transparent; color: var(--txt); font-weight: bold; 
+            transition: 0.3s; cursor: pointer;
+        }
+        .tab-btn.active { background: var(--card); color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
 
-    /* Tarjetas con profundidad */
-    .card { 
-        background: var(--card); border-radius: 16px; padding: 20px; 
-        margin-bottom: 20px; border: 1px solid #30363d; 
-        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-        transition: transform 0.2s;
-    }
-    .card:active { transform: scale(0.98); }
-    .card h3 { margin: 0 0 10px 0; color: white; font-size: 1.4em; }
-    
-    /* Tags y Notas */
-    .tag { background: rgba(63, 185, 80, 0.1); color: var(--accent); padding: 4px 10px; border-radius: 20px; font-size: 0.7em; border: 1px solid var(--accent); margin-right: 5px; }
-    .section-title { font-size: 0.8em; text-transform: uppercase; color: #768390; margin-top: 15px; display: block; font-weight: 800; }
-    .med-note { color: #85e89d; background: rgba(46, 160, 67, 0.1); padding: 10px; border-radius: 8px; border-left: 4px solid var(--accent); }
-    .judo-note { color: #79c0ff; background: rgba(56, 139, 253, 0.1); padding: 10px; border-radius: 8px; border-left: 4px solid var(--judo); }
+        #tabataPanel { background: var(--card); border-radius: 16px; padding: 20px; margin-bottom: 20px; border: 2px solid var(--judo); text-align: center; }
+        #timerDisplay { font-size: 4em; font-weight: 800; color: var(--accent); margin: 10px 0; }
+        #statusDisplay { font-size: 1.2em; font-weight: bold; color: var(--gold); text-transform: uppercase; }
 
-    /* Inputs y Botones Admin */
-    button.main { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 800; font-size: 1em; margin-top: 15px; transition: 0.3s; }
-    .btn-acc { background: linear-gradient(135deg, #238636, #2ea043); color: white; }
-    .btn-master { background: #21262d; color: #8b949e; border: 1px solid #30363d; margin-top: 50px; }
-</style>
+        .card { 
+            background: var(--card); border-radius: 16px; padding: 20px; 
+            margin-bottom: 20px; border: 1px solid #30363d; 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+        .card h3 { margin: 0 0 10px 0; color: white; font-size: 1.3em; }
+        .tag { background: rgba(63, 185, 80, 0.1); color: var(--accent); padding: 4px 10px; border-radius: 20px; font-size: 0.7em; border: 1px solid var(--accent); margin-right: 5px; }
+        .section-title { font-size: 0.8em; text-transform: uppercase; color: #768390; margin-top: 15px; display: block; font-weight: 800; }
+        .med-note { color: #85e89d; background: rgba(46, 160, 67, 0.1); padding: 10px; border-radius: 8px; border-left: 4px solid var(--accent); font-size: 0.9em; }
+        .judo-note { color: #79c0ff; background: rgba(56, 139, 253, 0.1); padding: 10px; border-radius: 8px; border-left: 4px solid var(--judo); font-size: 0.9em; }
 
+        button.main { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 800; font-size: 1em; margin-top: 10px; cursor: pointer; }
+        .btn-acc { background: linear-gradient(135deg, #238636, #2ea043); color: white; }
+        .btn-master { background: #21262d; color: #8b949e; border: 1px solid #30363d; margin-top: 40px; }
+        #masterPanel { display: none; background: #1c2128; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px dashed var(--accent); }
+        textarea { width: 100%; background: #0b0e14; color: #fff; border: 1px solid #30363d; border-radius: 8px; padding: 10px; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+
+    <h2>🥋 Dojo Training</h2>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('salud', this)">Salud & Core</button>
+        <button class="tab-btn" onclick="switchTab('judo', this)">Modo Dojo</button>
+    </div>
+
+    <div id="tabataPanel" style="display:none;">
+        <div id="statusDisplay">PREPARADO</div>
+        <div id="timerDisplay">00:20</div>
+        <div style="display: flex; gap: 10px;">
+            <button class="main btn-acc" style="flex:2" onclick="startTabata()">INICIAR</button>
+            <button class="main" style="flex:1; background:var(--danger); color:white" onclick="stopTabata()">PARAR</button>
+        </div>
+    </div>
 
     <div id="masterPanel">
-        <h4 style="margin:0 0 10px 0">Panel Maestro</h4>
-        <textarea id="jsonInput" rows="5" placeholder="Pega el JSON de los agentes aquí..."></textarea>
+        <h4 style="margin:0 0 10px 0">Importación Maestra</h4>
+        <textarea id="jsonInput" rows="5" placeholder="Pega el JSON aquí..."></textarea>
         <button class="main btn-acc" onclick="importarJSON()">Cargar Conocimiento</button>
     </div>
 
@@ -71,67 +84,81 @@
         let currentTab = 'salud';
         const MASTER_KEY = "JUDO2026";
         let isMaster = false;
+        let timerInterval;
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-        function switchTab(tab) {
+        function beep(freq, duration) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.frequency.value = freq;
+            gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+            osc.start(); osc.stop(audioCtx.currentTime + duration);
+        }
+
+        function switchTab(tab, btn) {
             currentTab = tab;
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
+            btn.classList.add('active');
+            document.getElementById('tabataPanel').style.display = (tab === 'judo') ? 'block' : 'none';
             render();
         }
 
+        function startTabata() {
+            let rounds = 8, isWork = true, timeLeft = 20;
+            clearInterval(timerInterval);
+            beep(600, 0.5);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                if(timeLeft <= 0) {
+                    if(isWork) { isWork = false; timeLeft = 10; rounds--; beep(400, 0.5); if(rounds <= 0) { clearInterval(timerInterval); alert("¡Fin!"); return; } }
+                    else { isWork = true; timeLeft = 20; beep(800, 0.5); }
+                }
+                document.getElementById('timerDisplay').innerText = `00:${timeLeft.toString().padStart(2, '0')}`;
+                document.getElementById('statusDisplay').innerText = isWork ? `TRABAJO (${rounds})` : "DESCANSO";
+                document.getElementById('timerDisplay').style.color = isWork ? "var(--accent)" : "var(--gold)";
+            }, 1000);
+        }
+
+        function stopTabata() { clearInterval(timerInterval); }
+
         function checkMaster() {
-            const p = prompt("Introduce Passcode Maestro:");
-            if(p === MASTER_KEY) {
+            if(prompt("Introduce Passcode Maestro:") === MASTER_KEY) {
                 isMaster = true;
                 document.getElementById('masterPanel').style.display = 'block';
                 render();
-                alert("Perfil Maestro Activado");
             }
         }
 
         function importarJSON() {
             try {
                 const data = JSON.parse(document.getElementById('jsonInput').value);
-                const arrayData = Array.isArray(data) ? data : [data];
-                db = [...db, ...arrayData];
+                db = [...db, ...(Array.isArray(data) ? data : [data])];
                 localStorage.setItem('dojo_db', JSON.stringify(db));
                 document.getElementById('jsonInput').value = '';
                 render();
-            } catch(e) { alert("Error en el formato JSON"); }
+            } catch(e) { alert("Error en JSON"); }
         }
 
-        function borrarItem(index) {
-            if(confirm("¿Eliminar este ejercicio?")) {
-                db.splice(index, 1);
-                localStorage.setItem('dojo_db', JSON.stringify(db));
-                render();
-            }
-        }
+        function borrarItem(idx) { if(confirm("¿Eliminar?")) { db.splice(idx, 1); localStorage.setItem('dojo_db', JSON.stringify(db)); render(); } }
 
         function render() {
             const container = document.getElementById('content');
             container.innerHTML = '';
-            
             const filtered = db.filter(item => {
-                if(currentTab === 'salud') return item.categoria.toLowerCase().includes('salud');
-                return item.categoria.toLowerCase().includes('dojo') || item.categoria.toLowerCase().includes('judo');
+                const cat = item.categoria.toLowerCase();
+                return currentTab === 'salud' ? cat.includes('salud') : (cat.includes('dojo') || cat.includes('judo'));
             });
-
-            filtered.forEach((item, index) => {
+            filtered.forEach((item) => {
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `
                     <h3>${item.titulo}</h3>
                     ${item.tags.map(t => `<span class="tag">${t}</span>`).join('')}
-                    <span class="section-title">Técnica:</span>
-                    <p style="margin:5px 0">${item.tecnica}</p>
-                    <span class="section-title">Traumatólogo (Core/Fascia/Artic.):</span>
-                    <p class="med-note" style="margin:5px 0">${item.consejo_medico}</p>
-                    <span class="section-title">Aplicación Judo:</span>
-                    <p class="judo-note" style="margin:5px 0">${item.aplicacion_judo}</p>
-                    <div class="admin-controls" style="display: ${isMaster ? 'block' : 'none'}">
-                        <button onclick="borrarItem(${db.indexOf(item)})" style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:0.8em">Eliminar Ficha</button>
-                    </div>
+                    <span class="section-title">Técnica:</span><p>${item.tecnica}</p>
+                    <span class="section-title">Traumatólogo:</span><p class="med-note">${item.consejo_medico}</p>
+                    <span class="section-title">Judo:</span><p class="judo-note">${item.aplicacion_judo}</p>
+                    ${isMaster ? `<button onclick="borrarItem(${db.indexOf(item)})" style="color:var(--danger); background:none; border:none; cursor:pointer; font-size:0.8em; margin-top:10px">Eliminar Ficha</button>` : ''}
                 `;
                 container.appendChild(card);
             });
@@ -139,5 +166,4 @@
         render();
     </script>
 </body>
-  
 </html>
